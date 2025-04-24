@@ -45,7 +45,7 @@ class VFLNetwork(nn.Module):
         super(VFLNetwork, self).__init__()
         self.num_cli = None
         self.cli_features = None
-        self.bottom_models = local_models
+        self.bottom_models = nn.ModuleList(local_models)
         self.top_model = TopModel(self.bottom_models, n_outs)
         self.optimizer = optim.AdamW(self.parameters())
         self.criterion = nn.CrossEntropyLoss()
@@ -105,7 +105,7 @@ class VFLNetwork(nn.Module):
 if __name__ == "__main__":
     torch.manual_seed(42)
     np.random.seed(42)
-    df = pd.read_csv("../tutorial_2a/heart.csv")
+    df = pd.read_csv(Path(__file__).parents[1] / "tutorial_2a" / "heart.csv")
     categorical_cols = ['sex', 'cp', 'fbs', 'restecg', 'exang', 'slope', 'ca', 'thal']
     numerical_cols = ['age', 'trestbps', 'chol', 'thalach', 'oldpeak']
     df[numerical_cols] = MinMaxScaler().fit_transform(df[numerical_cols])
